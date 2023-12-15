@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}SHOP{% endblock %}
+{% block main %}
+
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+
+                {% include 'includes/sidebar.html' %}
+
+                <div class="col-md-8">
+                    <div class="product-content-right">
+                        <div class="product-breadcroumb">
+                            <a href="{% url 'shop:home' %}">Home</a>
+                            <a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a>
+                            <a href="{{ product.get_absolute_url }}">{{ product }}</a>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="product-images">
+                                    <div class="product-main-img">
+                                        {% if object.image %}
+                                            <img src="{{ object.image.url }}" alt="">
+                                        {% else %}
+                                            <img src="{% static 'img/no_image.png' %}" alt="">
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="product-gallery">
+                                        {% for image in object.additional_images.all %}
+                                            <img src="{{ image.url }}" alt="">
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="product-inner">
+                                    <h2 class="product-name">{{ object }}</h2>
+                                    <div class="product-inner-price">
+                                        {% if object.discount %}
+                                            <ins>${{ object.get_price_after_discount }}</ins>
+                                            <del>${{ object.price }}</del>
+                                        {% else %}
+                                            <ins>${{ object.price }}</ins>
+                                        {% endif %}
+                                    </div>
+
+                                    <form action="{% url 'cart:cart_add' object.id %}" class="cart" method="post">
+                                        {% csrf_token %}
+                                        <div class="quantity">
+                                            <input type="number" size="4" class="input-text qty text" title="Qty"
+                                                   value="1" name="quantity" min="1" step="1">
+                                        </div>
+                                        <button class="add_to_cart_button" type="submit">Add to cart</button>
+                                    </form>
+
+                                    <div class="product-inner-category">
+                                        <p>Category: <a
+                                                href="{{ object.category.get_absolute_url }}">{{ object.category }}</a>.
+                                            Tags:
+                                            {% for tag in object.tags.all %}
+                                                {% if forloop.last %}
+                                                    {{ tag }}.
+                                                {% else %}
+                                                    {{ tag }},
+                                                {% endif %}
+                                            {% endfor %}
+                                    </div>
+
+                                    <div role="tabpanel">
+                                        <ul class="product-tab" role="tablist">
+                                            <li role="presentation" class="active"><a href="#home" aria-controls="home"
+                                                                                      role="tab" data-toggle="tab">Description</a>
+                                            </li>
+                                            <li role="presentation"><a href="#profile" aria-controls="profile"
+                                                                       role="tab" data-toggle="tab">Reviews</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane fade in active" id="home">
+                                                <h2>Product Description</h2>
+                                                <p>{{ object.description }}</p>
+                                            </div>
+                                            <div role="tabpanel" class="tab-pane fade" id="profile">
+                                                <h2>Reviews</h2>
+                                                <div class="submit-review">
+                                                    <p><label for="name">Name</label> <input name="name" type="text">
+                                                    </p>
+                                                    <p><label for="email">Email</label> <input name="email"
+                                                                                               type="email"></p>
+                                                    <div class="rating-chooser">
+                                                        <p>Your rating</p>
+
+                                                        <div class="rating-wrap-post">
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                        </div>
+                                                    </div>
+                                                    <p><label for="review">Your review</label> <textarea name="review"
+                                                                                                         id="" cols="30"
+                                                                                                         rows="10"></textarea>
+                                                    </p>
+                                                    <p><input type="submit" value="Submit"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="related-products-wrapper">
+                            <h2 class="related-products-title">Related Products</h2>
+                            <div class="related-products-carousel">
+                                {% for product in other_products %}
+                                    <div class="single-product">
+                                        <div class="product-f-image">
+                                            {% if product.image %}
+                                                <img src="{{ product.image.url }}" style="height: 300px" alt="">
+                                            {% else %}
+                                                <img src="{% static 'img/no_image.png' %}" style="height: 300px" alt="">
+                                            {% endif %}
+                                            <div class="product-hover">
+                                                <a href="" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i>
+                                                    Add to cart</a>
+                                                <a href="{{ product.get_absolute_url }}" class="view-details-link"><i
+                                                        class="fa fa-link"></i> See
+                                                    details</a>
+                                            </div>
+                                        </div>
+
+                                        <h2><a href="{{ product.get_absolute_url }}">{{ product }}</a></h2>
+
+                                        <div class="product-carousel-price">
+                                            {% if product.discount %}
+                                                <ins>${{ product.get_price_after_discount }}</ins>
+                                                <del>${{ product.price }}</del>
+                                            {% else %}
+                                                <ins>${{ product.price }}</ins>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

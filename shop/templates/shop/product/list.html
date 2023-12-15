@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}SHOP{% endblock %}
+{% block main %}
+
+    <div class="single-product-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+                {% for obj in object_list %}
+                    <div class="col-md-3 col-sm-6">
+                        <div class="single-shop-product">
+                            <div class="product-upper">
+                                {% if obj.image %}
+                                    <img src="{{ obj.image.url }}" style="height: 180px" alt="">
+                                {% else %}
+                                    <img src="{% static 'img/no_image.png' %}" style="height: 180px" alt="no image">
+                                {% endif %}
+                            </div>
+                            <h2><a href="{{ obj.get_absolute_url }}">{{ obj.name }}</a></h2>
+                            <div class="product-carousel-price">
+                                {% if obj.discount %}
+                                    <ins>${{ obj.get_price_after_discount }}</ins>
+                                    <del>${{ obj.price }}</del>
+                                {% else %}
+                                    <ins>${{ obj.price }}</ins>
+                                {% endif %}
+                            </div>
+
+                            <div class="product-option-shop">
+                                <form action="{% url 'cart:cart_add' obj.id %}" class="cart" method="post">
+                                        {% csrf_token %}
+                                        <button class="add_to_cart_button" type="submit" value="1" name="quantity">Add to cart</button>
+                                    </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% include 'includes/pagination.html' %}
+
+        </div>
+    </div>
+{% endblock %}

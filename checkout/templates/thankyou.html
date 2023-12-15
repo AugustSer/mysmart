@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}SHOP{% endblock %}
+{% block main %}
+{#    <h1>Thank you</h1>#}
+{#    <p>Your order has been successfully completed. Your order number is#}
+{#        <strong>{{ order.id }}</strong>.</p>#}
+
+    <div class="site-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <span class="icon-check_circle display-3 text-success"></span>
+            <h2 class="display-3 text-black">Thank you!</h2>
+            <p class="lead mb-5">You order was successfuly completed. Your order number is <strong>{{ order.id }}</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
